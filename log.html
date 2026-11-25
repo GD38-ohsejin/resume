@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>포트폴리오 열람 로그</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --bg:#f6f7f9;--surface:#ffffff;--ink:#181d26;--text:#333840;--muted:#5b616b;--line:#dfe2e6;
+  --mint:#d6efe3;--mint-strong:#c4e6d6;--acc:#1f6b4e;--acc-ink:#ffffff;--warn-bg:#fdf0dc;--warn:#8a5300;
+  --bar:#1f6b4e;--bar-bg:#e6efeb;--chip:#eef1f4;--focus:#458fff;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111418;--surface:#1a1f26;--ink:#f1f3f5;--text:#d5d9de;--muted:#9aa1ab;--line:#2c333c;
+  --mint:#1d3a2e;--mint-strong:#24493a;--acc:#5cc79a;--acc-ink:#0d1a14;--warn-bg:#3a2a12;--warn:#f2bf6b;
+  --bar:#5cc79a;--bar-bg:#24312b;--chip:#252c35;--focus:#7fb0ff;
+}}
+:root[data-theme="dark"]{
+  --bg:#111418;--surface:#1a1f26;--ink:#f1f3f5;--text:#d5d9de;--muted:#9aa1ab;--line:#2c333c;
+  --mint:#1d3a2e;--mint-strong:#24493a;--acc:#5cc79a;--acc-ink:#0d1a14;--warn-bg:#3a2a12;--warn:#f2bf6b;
+  --bar:#5cc79a;--bar-bg:#24312b;--chip:#252c35;--focus:#7fb0ff;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:15px;line-height:1.5;word-break:keep-all}
+h1,h2,h3,p{margin:0}
+a{color:var(--acc)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 24px 80px;display:flex;flex-direction:column;gap:24px}
+@media (max-width:600px){.wrap{padding:20px 16px 64px}}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.top h1{font-size:28px;font-weight:600;letter-spacing:-0.02em;color:var(--ink)}
+.sub{color:var(--muted);font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.card h2{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:500;color:var(--muted)}
+input[type=text],input[type=password],input[type=url]{height:40px;padding:0 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;font-size:14px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{height:40px;padding:0 16px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.btn.sm{height:32px;padding:0 12px;font-size:13px}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink)}
+.toggle{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500}
+.msg{font-size:13px;color:var(--muted);min-height:20px}
+.msg.err{color:var(--warn)}
+.note{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:10px 14px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:720px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.stat .k{font-size:12px;color:var(--muted);font-weight:500}
+.stat .v{font-size:26px;font-weight:600;color:var(--ink);letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin-top:4px}
+.stat .v small{font-size:14px;color:var(--muted);font-weight:500}
+.co{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.co-head{display:grid;grid-template-columns:minmax(0,1.6fr) auto minmax(0,1fr) minmax(0,1fr) auto;gap:12px 16px;align-items:center;padding:16px 20px;width:100%;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.co-head:hover{background:var(--chip)}
+@media (max-width:720px){.co-head{grid-template-columns:minmax(0,1fr) auto}.co-head .hide-m{display:none}}
+.co-name{font-size:16px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.co-memo{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge.on{background:var(--mint);color:var(--ink)}
+.badge.off{background:var(--chip);color:var(--muted)}
+.kv{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kv .k{font-size:11px;color:var(--muted)}
+.kv .v{font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chev{color:var(--muted);font-size:13px;transition:transform .2s}
+.co[data-open="1"] .chev{transform:rotate(90deg)}
+.co-body{border-top:1px solid var(--line);padding:16px 20px 20px;display:none;flex-direction:column;gap:20px}
+.co[data-open="1"] .co-body{display:flex}
+.sect-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr) 56px;gap:10px;align-items:center;font-size:13px}
+@media (max-width:600px){.bar{grid-template-columns:minmax(0,1fr) 72px}.bar .track{grid-column:1 / -1;order:3}}
+.bar .lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.bar .track{height:8px;background:var(--bar-bg);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;background:var(--bar);border-radius:4px}
+.bar .sec{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:6px;background:var(--chip);font-size:12px;color:var(--text)}
+.chip b{font-weight:600;color:var(--ink)}
+.sess{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.sess-h{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.sess-h strong{color:var(--ink);font-weight:600}
+.linkbox{display:flex;gap:8px;align-items:center;background:var(--chip);border-radius:8px;padding:6px 6px 6px 12px;min-width:0}
+.linkbox code{flex:1;min-width:0;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.lk{flex:none;font-size:12px;font-weight:600;color:var(--muted);min-width:64px}
+.empty{color:var(--muted);text-align:center;padding:32px 16px;font-size:14px}
+details summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:15px}
+details ol{margin:12px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+details code{background:var(--chip);padding:1px 6px;border-radius:4px;font-size:13px}
+.list{display:flex;flex-direction:column;gap:10px}
+.toolbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.toolbar h2{font-size:18px;font-weight:600;color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>포트폴리오 열람 로그</h1>
+      <p class="sub" id="loadedAt">아직 불러오지 않았어요</p>
+    </div>
+    <div class="row">
+      <button class="btn" id="refresh" type="button">새로고침</button>
+    </div>
+  </div>
+
+  <div class="note" id="demoNote" hidden>지금 보이는 건 <b>예시 데이터</b>예요. 아래 연결 설정을 마치면 실제 기록으로 바뀌어요.</div>
+
+  <section class="card" aria-labelledby="h-conn">
+    <h2 id="h-conn">연결 설정</h2>
+    <div class="grid2">
+      <label>Apps Script 웹 앱 주소<input type="url" id="cfgUrl" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off"></label>
+      <label>비밀번호 (Code.gs 의 DASHBOARD_KEY)<input type="password" id="cfgKey" autocomplete="off"></label>
+    </div>
+    <div class="row" style="margin-top:12px;justify-content:space-between">
+      <label class="toggle"><input type="checkbox" id="ownerToggle"> 이 브라우저에서 내가 보는 건 기록하지 않기</label>
+      <div class="row">
+        <button class="btn ghost sm" id="demoBtn" type="button">예시로 미리 보기</button>
+        <button class="btn pri" id="saveCfg" type="button">저장하고 불러오기</button>
+      </div>
+    </div>
+    <p class="msg" id="cfgMsg" role="status"></p>
+    <details style="margin-top:8px">
+      <summary>처음 설정하는 방법</summary>
+      <ol>
+        <li>구글 드라이브에서 새 구글 시트를 만들고, 메뉴의 <b>확장 프로그램 → Apps Script</b>를 엽니다.</li>
+        <li><code>apps-script/Code.gs</code> 내용을 통째로 붙여넣고, 맨 위 <code>DASHBOARD_KEY</code> 값을 나만 아는 문구로 바꾼 뒤 저장합니다.</li>
+        <li><b>배포 → 새 배포</b> → 유형 <b>웹 앱</b>, 다음 사용자로 실행 <b>나</b>, 액세스 권한 <b>모든 사용자</b>로 배포합니다. 처음엔 구글 권한 확인 창이 뜨는데 허용하면 됩니다.</li>
+        <li>나온 <b>웹 앱 URL</b>을 <code>config.js</code> 의 <code>window.PF_LOG_URL = '';</code> 따옴표 안에 넣습니다. 홈페이지와 입사지원서가 함께 이 주소를 씁니다.</li>
+        <li><code>index.html</code>, <code>resume.html</code>, <code>config.js</code>, <code>log.html</code> 을 GitHub 저장소에 올리고 <b>Settings → Pages</b>에서 배포합니다.</li>
+        <li>배포된 <code>…/log.html</code>을 열어 위 칸에 웹 앱 주소와 비밀번호를 넣고 저장합니다. 내 열람이 섞이지 않게 <b>내가 보는 건 기록하지 않기</b>도 켜 두세요.</li>
+        <li>아래 <b>회사별 링크 만들기</b>에서 지원하는 회사마다 링크를 만들어 보내면, 그 링크로 들어온 열람이 회사별로 정리돼요.</li>
+      </ol>
+    </details>
+  </section>
+
+  <section class="card" aria-labelledby="h-link">
+    <h2 id="h-link">회사별 링크 만들기</h2>
+    <div class="grid2">
+      <label>사이트 주소 (index.html 이 있는 곳)<input type="url" id="siteUrl" placeholder="https://아이디.github.io/portfolio/"></label>
+      <label>회사 이름<input type="text" id="coName" placeholder="예: ○○게임즈 전투기획 공고" maxlength="80"></label>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <input type="text" id="coMemo" placeholder="메모 (선택) — 지원 날짜, 공고 링크 등" maxlength="200" style="flex:1;min-width:200px">
+      <button class="btn pri" id="makeLink" type="button">링크 만들기</button>
+    </div>
+    <p class="msg" id="linkMsg" role="status"></p>
+    <div id="newLinkBox" hidden style="display:flex;flex-direction:column;gap:8px">
+      <div class="linkbox"><span class="lk">홈페이지</span><code id="newLink"></code><button class="btn sm" type="button" id="copyNew">복사</button></div>
+      <div class="linkbox"><span class="lk">입사지원서</span><code id="newLinkR"></code><button class="btn sm" type="button" id="copyNewR">복사</button></div>
+    </div>
+  </section>
+
+  <div class="stats" aria-label="요약">
+    <div class="stat"><div class="k">링크 보낸 회사</div><div class="v" id="sSent">–</div></div>
+    <div class="stat"><div class="k">열람한 회사</div><div class="v" id="sOpened">–</div></div>
+    <div class="stat"><div class="k">전체 열람 횟수</div><div class="v" id="sSessions">–</div></div>
+    <div class="stat"><div class="k">마지막 열람</div><div class="v" id="sLast" style="font-size:18px;padding-top:6px">–</div></div>
+  </div>
+
+  <section aria-labelledby="h-list" style="display:flex;flex-direction:column;gap:12px">
+    <div class="toolbar">
+      <h2 id="h-list">회사별 열람 현황</h2>
+      <label class="toggle"><input type="checkbox" id="onlyOpened"> 열람한 곳만 보기</label>
+    </div>
+    <div class="list" id="list"><div class="empty">연결 설정을 마치면 여기에 회사별 기록이 보여요.</div></div>
+  </section>
+</div>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const S = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} },
+  };
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmtDate = iso => { const d = new Date(iso); return isNaN(d) ? '-' : d.toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' }); };
+  const fmtSec = s => { s = Math.round(s || 0); if (s < 60) return s + '초'; const m = Math.floor(s / 60), r = s % 60; return m < 60 ? m + '분' + (r ? ' ' + r + '초' : '') : Math.floor(m / 60) + '시간 ' + (m % 60) + '분'; };
+  const ago = iso => { const d = (Date.now() - new Date(iso)) / 1000; if (d < 60) return '방금'; if (d < 3600) return Math.floor(d / 60) + '분 전'; if (d < 86400) return Math.floor(d / 3600) + '시간 전'; return Math.floor(d / 86400) + '일 전'; };
+  const okUrl = u => /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(u);
+  const newCode = () => { const a = 'abcdefghjkmnpqrstuvwxyz23456789'; let s = ''; const r = crypto.getRandomValues(new Uint8Array(7)); r.forEach(x => s += a[x % a.length]); return s; };
+
+  // ── settings ──
+  $('cfgUrl').value = S.get('pf_logurl') || '';
+  $('cfgKey').value = S.get('pf_key') || '';
+  $('siteUrl').value = S.get('pf_site') || location.href.replace(/log\.html.*$/, '').replace(/[?#].*$/, '');
+  $('ownerToggle').checked = S.get('pf_owner') === '1';
+  $('ownerToggle').addEventListener('change', e => S.set('pf_owner', e.target.checked ? '1' : null));
+  $('siteUrl').addEventListener('change', e => S.set('pf_site', e.target.value.trim()));
+  $('onlyOpened').addEventListener('change', render);
+
+  let DATA = null, DEMO = false, open = new Set();
+
+  async function load() {
+    const url = $('cfgUrl').value.trim(), key = $('cfgKey').value;
+    if (!okUrl(url)) { msg('cfgMsg', '웹 앱 주소는 https://script.google.com/macros/s/…/exec 형태여야 해요.', true); return; }
+    if (!key) { msg('cfgMsg', '비밀번호를 넣어 주세요.', true); return; }
+    msg('cfgMsg', '불러오는 중…');
+    try {
+      const res = await fetch(url + '?key=' + encodeURIComponent(key), { cache: 'no-store' });
+      const j = await res.json();
+      if (!j.ok) { msg('cfgMsg', j.error === 'unauthorized' ? '비밀번호가 맞지 않아요.' : '기록을 읽지 못했어요.', true); return; }
+      DATA = j; DEMO = false; $('demoNote').hidden = true;
+      $('loadedAt').textContent = new Date().toLocaleString('ko-KR') + ' 기준';
+      msg('cfgMsg', '');
+      render();
+    } catch (e) {
+      msg('cfgMsg', '연결하지 못했어요. 웹 앱 주소와 배포 설정(액세스 권한: 모든 사용자)을 확인해 주세요.', true);
+    }
+  }
+  function msg(id, text, err) { const el = $(id); el.textContent = text; el.classList.toggle('err', !!err); }
+
+  $('saveCfg').addEventListener('click', () => { S.set('pf_logurl', $('cfgUrl').value.trim()); S.set('pf_key', $('cfgKey').value); load(); });
+  $('refresh').addEventListener('click', () => DEMO ? render() : load());
+  $('demoBtn').addEventListener('click', () => { DATA = demoData(); DEMO = true; $('demoNote').hidden = false; $('loadedAt').textContent = '예시 데이터'; render(); });
+
+  // ── link maker ──
+  let lastLink = '', lastLinkR = '';
+  $('makeLink').addEventListener('click', async () => {
+    const site = $('siteUrl').value.trim(), company = $('coName').value.trim(), memo = $('coMemo').value.trim();
+    const url = S.get('pf_logurl') || '', key = S.get('pf_key') || '';
+    if (!/^https?:\/\//.test(site)) { msg('linkMsg', '홈페이지 주소를 넣어 주세요.', true); return; }
+    if (!company) { msg('linkMsg', '회사 이름을 넣어 주세요.', true); return; }
+    S.set('pf_site', site);
+    const code = newCode();
+    lastLink = linkFor(code, 'home'); lastLinkR = linkFor(code, 'resume');
+    $('newLink').textContent = lastLink; $('newLinkR').textContent = lastLinkR; $('newLinkBox').hidden = false;
+    if (DEMO || !okUrl(url) || !key) { msg('linkMsg', '링크를 만들었어요. 연결 설정이 안 돼 있어서 회사 목록에는 등록되지 않았어요.', true); return; }
+    msg('linkMsg', '등록하는 중…');
+    try {
+      await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'register', key, code, company, memo }) });
+      await new Promise(r => setTimeout(r, 1500));
+      await load();
+      const ok = DATA && DATA.links.some(l => String(l['링크코드']) === code);
+      msg('linkMsg', ok ? `「${company}」 링크를 등록했어요. 복사해서 보내세요.` : '링크는 만들었지만 등록이 확인되지 않았어요. 비밀번호와 배포 버전을 확인해 주세요.', !ok);
+      if (ok) { $('coName').value = ''; $('coMemo').value = ''; }
+    } catch (e) { msg('linkMsg', '등록하지 못했어요. 연결 설정을 확인해 주세요.', true); }
+  });
+  $('copyNew').addEventListener('click', () => copy(lastLink, $('copyNew')));
+  $('copyNewR').addEventListener('click', () => copy(lastLinkR, $('copyNewR')));
+  function copy(text, btn) {
+    const done = () => { const t = btn.textContent; btn.textContent = '복사됨'; setTimeout(() => btn.textContent = t, 1200); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => prompt('복사해 주세요', text));
+    else prompt('복사해 주세요', text);
+  }
+
+  // ── aggregate ──
+  function build(data) {
+    const sessions = new Map();
+    for (const r of data.log) {
+      const sid = String(r['세션'] || ''); if (!sid) continue;
+      let s = sessions.get(sid);
+      if (!s) { s = { sid, vid: String(r['방문자'] || ''), code: String(r['링크코드'] || ''), start: r['시각'], end: r['시각'], device: '', ref: '', views: [], clicks: [], dwell: null, total: 0, depth: 0 }; sessions.set(sid, s); }
+      if (r['시각'] < s.start) s.start = r['시각'];
+      if (r['시각'] > s.end) s.end = r['시각'];
+      const t = r['이벤트'], target = String(r['대상'] || '');
+      let extra = {}; try { extra = JSON.parse(r['기타'] || '{}') || {}; } catch (e) {}
+      if (t === 'open') { s.device = target; s.ref = extra.ref || ''; s.page = extra.page || '홈페이지'; }
+      else if (t === 'view') { if (!s.views.includes(target)) s.views.push(target); }
+      else if (t === 'click') s.clicks.push(target);
+      else if (t === 'summary') {
+        const sec = Number(r['초']) || 0;
+        if (sec >= s.total) { s.total = sec; s.dwell = extra.dwell || {}; s.depth = Number(extra.depth) || 0; }
+      }
+    }
+    const list = [...sessions.values()];
+    // 같은 브라우저가 나중에 링크 없이 다시 들어온 경우, 앞서 쓴 링크의 회사로 묶습니다.
+    const vidCode = {};
+    list.filter(s => s.code).sort((a, b) => a.start < b.start ? -1 : 1).forEach(s => { if (!vidCode[s.vid]) vidCode[s.vid] = s.code; });
+    list.forEach(s => { if (!s.code && vidCode[s.vid]) { s.code = vidCode[s.vid]; s.revisit = true; } });
+    list.forEach(s => { if (!s.total) s.total = Math.max(0, (new Date(s.end) - new Date(s.start)) / 1000); });
+
+    const companies = new Map();
+    for (const l of data.links) {
+      const code = String(l['링크코드'] || ''); if (!code) continue;
+      companies.set(code, { code, name: String(l['회사'] || code), memo: String(l['메모'] || ''), created: l['만든 시각'], sessions: [], registered: true });
+    }
+    for (const s of list) {
+      const key = s.code || '__direct';
+      if (!companies.has(key)) companies.set(key, key === '__direct'
+        ? { code: '', name: '링크 없이 들어온 방문', memo: '회사 링크가 아닌 주소로 들어온 열람이에요', sessions: [], registered: false, direct: true }
+        : { code: key, name: '등록 안 된 링크 (' + key + ')', memo: '회사 목록에 없는 링크 코드예요', sessions: [], registered: false });
+      companies.get(key).sessions.push(s);
+    }
+    for (const c of companies.values()) {
+      c.sessions.sort((a, b) => a.start < b.start ? 1 : -1);
+      c.total = c.sessions.reduce((n, s) => n + s.total, 0);
+      c.last = c.sessions[0] ? c.sessions[0].start : null;
+      c.first = c.sessions.length ? c.sessions[c.sessions.length - 1].start : null;
+      const order = [], dw = {};
+      c.sessions.slice().reverse().forEach(s => {
+        s.views.forEach(v => { if (!order.includes(v)) order.push(v); });
+        Object.entries(s.dwell || {}).forEach(([k, v]) => { if (!order.includes(k)) order.push(k); dw[k] = (dw[k] || 0) + Number(v || 0); });
+      });
+      c.order = order; c.dwell = dw;
+      const cl = {}; c.sessions.forEach(s => s.clicks.forEach(k => cl[k] = (cl[k] || 0) + 1)); c.clicks = cl;
+    }
+    return { sessions: list, companies: [...companies.values()] };
+  }
+
+  // ── render ──
+  function render() {
+    if (!DATA) return;
+    const { sessions, companies } = build(DATA);
+    const reg = companies.filter(c => c.registered);
+    $('sSent').textContent = reg.length;
+    $('sOpened').innerHTML = esc(reg.filter(c => c.sessions.length).length) + (reg.length ? ' <small>/ ' + esc(reg.length) + '</small>' : '');
+    $('sSessions').textContent = sessions.length;
+    const last = sessions.map(s => s.start).sort().pop();
+    $('sLast').textContent = last ? ago(last) : '–';
+
+    let rows = companies.slice().sort((a, b) => {
+      if (!!a.direct !== !!b.direct) return a.direct ? 1 : -1;
+      if ((a.last || '') !== (b.last || '')) return (a.last || '') < (b.last || '') ? 1 : -1;
+      return (a.created || '') < (b.created || '') ? 1 : -1;
+    });
+    if ($('onlyOpened').checked) rows = rows.filter(c => c.sessions.length);
+    const L = $('list');
+    if (!rows.length) { L.innerHTML = '<div class="empty">아직 기록이 없어요. 회사별 링크를 만들어 보내 보세요.</div>'; return; }
+    L.innerHTML = rows.map((c, i) => companyHtml(c, i)).join('');
+    L.querySelectorAll('.co-head').forEach(b => b.addEventListener('click', () => {
+      const co = b.closest('.co'), id = co.dataset.id, on = co.dataset.open !== '1';
+      co.dataset.open = on ? '1' : ''; b.setAttribute('aria-expanded', on); on ? open.add(id) : open.delete(id);
+    }));
+    L.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => copy(linkFor(b.dataset.copy, b.dataset.kind), b)));
+    L.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', () => remove(b.dataset.remove, b.dataset.name)));
+  }
+  function linkFor(code, kind) {
+    const site = ($('siteUrl').value.trim() || S.get('pf_site') || '').replace(/[?#].*$/, '');
+    let base;
+    try { base = new URL(kind === 'resume' ? 'resume.html' : './', site.replace(/(index|resume|log)\.html$/, '')).href; } catch (e) { base = site; }
+    return base + '?r=' + code;
+  }
+
+  function companyHtml(c, i) {
+    const id = c.code || '__direct', isOpen = open.has(id), n = c.sessions.length;
+    const status = c.direct ? '' : n ? '<span class="badge on">열람함</span>' : '<span class="badge off">아직 안 봄</span>';
+    const head = `
+      <button class="co-head" type="button" aria-expanded="${isOpen}" aria-controls="cb${i}">
+        <div class="kv" style="gap:2px"><span class="co-name">${esc(c.name)}</span>${c.memo ? `<span class="co-memo">${esc(c.memo)}</span>` : ''}</div>
+        ${status || '<span></span>'}
+        <div class="kv hide-m"><span class="k">열람</span><span class="v">${n ? esc(n) + '회 · ' + esc(fmtSec(c.total)) : '-'}</span></div>
+        <div class="kv hide-m"><span class="k">마지막 열람</span><span class="v">${c.last ? esc(fmtDate(c.last)) : '-'}</span></div>
+        <span class="chev hide-m" aria-hidden="true">▶</span>
+      </button>`;
+    const max = Math.max(1, ...Object.values(c.dwell));
+    const bars = c.order.length ? c.order.map(k => {
+      const v = c.dwell[k] || 0;
+      return `<div class="bar"><span class="lab" title="${esc(k)}">${esc(k)}</span><span class="track"><span class="fill" style="display:block;width:${Math.max(2, v / max * 100).toFixed(1)}%"></span></span><span class="sec">${v ? esc(fmtSec(v)) : '봄'}</span></div>`;
+    }).join('') : '<p class="sub">본 화면 기록이 없어요.</p>';
+    const clicks = Object.keys(c.clicks).length ? `<div class="chips">${Object.entries(c.clicks).map(([k, v]) => `<span class="chip">${esc(k)} <b>${esc(v)}</b></span>`).join('')}</div>` : '<p class="sub">누른 링크·버튼이 없어요.</p>';
+    const sess = n ? c.sessions.map(s => `
+      <div class="sess">
+        <div class="sess-h"><strong>${esc(fmtDate(s.start))}</strong><span class="badge ${s.page === '입사지원서' ? 'off' : 'on'}" style="height:22px">${esc(s.page || '홈페이지')}</span><span>${esc(s.device || '-')}</span><span>머문 시간 ${esc(fmtSec(s.total))}</span><span>스크롤 ${esc(s.depth || 0)}%</span>${s.ref ? `<span>유입 ${esc(s.ref)}</span>` : ''}${s.revisit ? '<span>링크 없이 재방문</span>' : ''}</div>
+        <div class="chips">${s.views.length ? s.views.map(v => `<span class="chip">${esc(v)}${s.dwell && s.dwell[v] ? ' <b>' + esc(fmtSec(s.dwell[v])) + '</b>' : ''}</span>`).join('') : '<span class="sub">본 화면 없음 (바로 닫음)</span>'}</div>
+        ${s.clicks.length ? `<div class="chips">${s.clicks.map(k => `<span class="chip">클릭 · ${esc(k)}</span>`).join('')}</div>` : ''}
+      </div>`).join('') : '<p class="sub">아직 이 링크로 들어온 기록이 없어요.</p>';
+    const tools = c.registered ? `
+      <div class="row" style="justify-content:space-between">
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+          <div class="linkbox"><span class="lk">홈페이지</span><code>${esc(linkFor(c.code, 'home'))}</code><button class="btn sm" type="button" data-copy="${esc(c.code)}" data-kind="home">복사</button></div>
+          <div class="linkbox"><span class="lk">입사지원서</span><code>${esc(linkFor(c.code, 'resume'))}</code><button class="btn sm" type="button" data-copy="${esc(c.code)}" data-kind="resume">복사</button></div>
+        </div>
+        <button class="btn ghost sm" type="button" data-remove="${esc(c.code)}" data-name="${esc(c.name)}">목록에서 삭제</button>
+      </div>` : '';
+    return `<article class="co" data-id="${esc(id)}" data-open="${isOpen ? '1' : ''}">${head}
+      <div class="co-body" id="cb${i}">
+        ${tools}
+        <div><div class="sect-title">본 화면과 머문 시간 (전체 열람 합계)</div><div class="bars">${bars}</div></div>
+        <div><div class="sect-title">누른 링크·버튼</div>${clicks}</div>
+        <div><div class="sect-title">열람 기록 ${n ? esc(n) + '회' : ''}</div><div class="list">${sess}</div></div>
+      </div></article>`;
+  }
+
+  async function remove(code, name) {
+    if (!confirm(`「${name}」을(를) 회사 목록에서 지울까요? 열람 기록은 시트에 그대로 남아요.`)) return;
+    if (DEMO) { DATA.links = DATA.links.filter(l => l['링크코드'] !== code); render(); return; }
+    try {
+      await fetch(S.get('pf_logurl'), { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'remove', key: S.get('pf_key'), code }) });
+      setTimeout(load, 1200);
+    } catch (e) { alert('삭제하지 못했어요.'); }
+  }
+
+  // ── 예시 데이터 (연결 전 미리 보기) ──
+  function demoData() {
+    const t = (d, h, m, s) => new Date(Date.now() - d * 86400000 - h * 3600000 - m * 60000 + (s || 0) * 1000).toISOString();
+    const L = (ts, vid, sid, code, ev, target, sec, extra) => ({ '시각': ts, '방문자': vid, '세션': sid, '링크코드': code, '이벤트': ev, '대상': target, '초': sec || '', '기타': extra || '' });
+    const a = t(0, 2, 10), b = t(2, 5, 0), c = t(1, 1, 0);
+    return {
+      ok: true,
+      links: [
+        { '링크코드': 'demoA1', '회사': '예시 회사 A · 전투기획', '메모': '11/18 지원', '만든 시각': t(7, 0, 0) },
+        { '링크코드': 'demoB2', '회사': '예시 회사 B · 콘텐츠기획', '메모': '11/20 지원', '만든 시각': t(5, 0, 0) },
+        { '링크코드': 'demoC3', '회사': '예시 회사 C', '메모': '', '만든 시각': t(1, 3, 0) },
+      ],
+      log: [
+        L(b, 'v1', 's1', 'demoA1', 'open', 'PC', 0, '{"ref":"mail.naver.com"}'),
+        L(b, 'v1', 's1', 'demoA1', 'view', '첫 화면'),
+        L(b, 'v1', 's1', 'demoA1', 'view', '경험 한눈에 보기'),
+        L(b, 'v1', 's1', 'demoA1', 'view', '프로젝트 01 상세 · Aftermath'),
+        L(b, 'v1', 's1', 'demoA1', 'click', '포트폴리오 폴더 (첫 화면)'),
+        L(b, 'v1', 's1', 'demoA1', 'summary', '전체', 214, '{"dwell":{"첫 화면":22,"경험 한눈에 보기":31,"프로젝트 01 상세 · Aftermath":118,"프로젝트 경험 (표지)":4},"depth":58}'),
+        L(a, 'v1', 's2', '', 'open', 'PC'),
+        L(a, 'v1', 's2', '', 'view', '자기소개 01 지원동기 (1/4)'),
+        L(a, 'v1', 's2', '', 'summary', '전체', 95, '{"dwell":{"첫 화면":6,"자기소개 01 지원동기 (1/4)":64,"자기소개 01 지원동기 (2/4)":25},"depth":92}'),
+        L(c, 'v2', 's3', 'demoB2', 'open', '모바일', 0, '{"page":"입사지원서"}'),
+        L(c, 'v2', 's3', 'demoB2', 'view', '지원서 · 인적사항'),
+        L(c, 'v2', 's3', 'demoB2', 'view', '지원서 · 프로젝트 경험'),
+        L(c, 'v2', 's3', 'demoB2', 'click', '지원서 PDF 저장'),
+        L(c, 'v2', 's3', 'demoB2', 'summary', '전체', 47, '{"dwell":{"지원서 · 인적사항":12,"지원서 · 프로젝트 경험":35},"depth":45}'),
+      ],
+    };
+  }
+
+  if (okUrl(S.get('pf_logurl') || '') && S.get('pf_key')) load();
+})();
+</script>
+</body>
+</html>
